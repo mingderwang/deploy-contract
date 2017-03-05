@@ -6,6 +6,7 @@ const solc = require('solc');
 * connect to ethereum node
 */ 
 const ethereumUri = 'http://192.168.1.106:8540';
+const address = '0x007802C7D8247c09a459030830223B61a7C90Ba1';
 
 let web3 = new Web3();
 web3.setProvider(new web3.providers.HttpProvider(ethereumUri));
@@ -26,6 +27,19 @@ for (let contractName in compiledContract.contracts) {
     var bytecode = compiledContract.contracts[contractName].bytecode;
     var abi = JSON.parse(compiledContract.contracts[contractName].interface);
 }
+
+let coinbase = web3.eth.coinbase;
+    console.log('coinbase:' + coinbase);
+    let balance = web3.eth.getBalance(coinbase);
+    console.log('balance:' + web3.fromWei(balance, 'ether') + " ETH");
+    let accounts = web3.eth.accounts;
+    console.log(accounts);
+    
+    if (web3.personal.unlockAccount(address, 'node1')) {
+        console.log(`${address} is unlocaked`);
+    }else{
+        console.log(`unlock failed, ${address}`);
+    }
 
 console.log(JSON.stringify(abi, undefined, 2));
 }
